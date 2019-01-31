@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">CellTower</string>
+
+    <!--Tower activity-->
+
+    <string name="dbm">-81 dBm</string>
+    <string name="cl_value">12345</string>
+    <string name="tac_value">12345</string>
+    <string name="mcc_value">123</string>
+    <string name="mnc_value">12</string>
+
+    <string name="cl">CL</string>
+    <string name="tac">LAC</string>
+    <string name="mcc">RSSI</string>
+    <string name="mnc">PSC</string>
+
+
+    <string name="export">Export</string>
+
+
+</resources>
