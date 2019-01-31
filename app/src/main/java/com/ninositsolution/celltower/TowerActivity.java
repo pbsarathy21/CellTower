@@ -33,6 +33,7 @@ public class TowerActivity extends AppCompatActivity implements ITower{
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tower);
         binding.setTower(new TowerVM(getApplicationContext(), TowerActivity.this, this));
 
+        LocationUpdate locationUpdate = new LocationUpdate(this);
 
 
     }
@@ -83,6 +84,8 @@ public class TowerActivity extends AppCompatActivity implements ITower{
             sheet.addCell(new Label(4, 0, "PSC"));
             sheet.addCell(new Label(5, 0, "NETWORK_TYPE"));
             sheet.addCell(new Label(6, 0, "DBM"));
+            sheet.addCell(new Label(7, 0, "LATITUDE"));
+            sheet.addCell(new Label(8, 0, "LONGITUDE"));
 
             if (cursor.moveToFirst()) {
                 do {
@@ -93,6 +96,8 @@ public class TowerActivity extends AppCompatActivity implements ITower{
                     String psc = cursor.getString(cursor.getColumnIndex("PSC"));
                     String network_type = cursor.getString(cursor.getColumnIndex("NETWORK_TYPE"));
                     String dbm = cursor.getString(cursor.getColumnIndex("DBM"));
+                    String lat = cursor.getString(cursor.getColumnIndex("LATITUDE"));
+                    String lon = cursor.getString(cursor.getColumnIndex("LONGITUDE"));
 
                     int i = cursor.getPosition() + 1;
                     sheet.addCell(new Label(0, i, id));
@@ -102,6 +107,8 @@ public class TowerActivity extends AppCompatActivity implements ITower{
                     sheet.addCell(new Label(4, i, psc));
                     sheet.addCell(new Label(5, i, network_type));
                     sheet.addCell(new Label(6, i, dbm));
+                    sheet.addCell(new Label(7, i, lat));
+                    sheet.addCell(new Label(8, i, lon));
                 } while (cursor.moveToNext());
             }
 

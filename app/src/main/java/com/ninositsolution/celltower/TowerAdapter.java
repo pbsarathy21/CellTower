@@ -2,6 +2,7 @@ package com.ninositsolution.celltower;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.CellInfo;
@@ -130,8 +131,13 @@ public class TowerAdapter extends RecyclerView.Adapter<TowerAdapter.TowerViewHol
             towerViewHolder.mnc.setText(psc_text);
         }
 
-        databaseHelper.insertData(cl_text,lac_text,rssi_text,psc_text,netType_text, dbm_text);
+        LocationUpdate locationUpdate = new LocationUpdate(context);
 
+        SharedPreferences preferences = context.getSharedPreferences("LOCATION", Context.MODE_PRIVATE);
+        String lat = preferences.getString("lat", "NA");
+        String lon = preferences.getString("lon", "NA");
+
+        databaseHelper.insertData(cl_text,lac_text,rssi_text,psc_text,netType_text, dbm_text, lat, lon);
     }
 
     @Override

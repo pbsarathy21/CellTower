@@ -22,6 +22,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_5 = "PSC";
     public static final String COL_6 = "NETWORK_TYPE";
     public static final String COL_7 = "DBM";
+    public static final String COL_8 = "LATITUDE";
+    public static final String COL_9 = "LONGITUDE";
 
 
     private Context context;
@@ -34,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("create table "+TABLE_NAME+" (ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "CL TEXT, LAC TEXT, RSSI TEXT, PSC TEXT, NETWORK_TYPE TEXT, DBM TEXT)");
+                "CL TEXT, LAC TEXT, RSSI TEXT, PSC TEXT, NETWORK_TYPE TEXT, DBM TEXT, LATITUDE TEXT, LONGITUDE TEXT)");
     }
 
     @Override
@@ -42,7 +44,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
     }
 
-    public boolean insertData(String cl, String lac, String rssi, String psc, String network_type, String dbm)
+    public boolean insertData(String cl, String lac, String rssi, String psc, String network_type, String dbm, String lat, String lon)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -52,6 +54,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_6, network_type);
         contentValues.put(COL_7, dbm);
         contentValues.put(COL_5, psc);
+        contentValues.put(COL_8, lat);
+        contentValues.put(COL_9, lon);
 
         long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
 
