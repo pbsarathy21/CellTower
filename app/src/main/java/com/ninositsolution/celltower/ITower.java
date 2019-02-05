@@ -10,4 +10,5 @@ public interface ITower {
     void setRecyclerViewAdapter(TowerAdapter towerAdapter);
     void listEmpty();
     void onExportClicked();
+    void onRefreshingLists();
 }

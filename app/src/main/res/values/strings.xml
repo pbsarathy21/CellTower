@@ -16,6 +16,11 @@
 
 
     <string name="export">Export</string>
+    <string name="type">TYPE</string>
+    <string name="id">ID</string>
+    <string name="p_mw">P(mW)</string>
+    <string name="list_empty">List Empty</string>
+    <string name="location">Make sure that Location access is switched on.</string>
 
 
 </resources>

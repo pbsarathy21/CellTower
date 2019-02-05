@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.telephony.NeighboringCellInfo;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -37,6 +38,8 @@ public class TowerVM {
             permission = towerModel.checkPermissions();
         }  while (!permission);
 
+        getLists();
+
         scheduleTask();
 
     }
@@ -45,6 +48,7 @@ public class TowerVM {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
+                iTower.onRefreshingLists();
                 getLists();          // this method will contain your almost-finished HTTP calls
                 handler.postDelayed(this, DURATION);
             }

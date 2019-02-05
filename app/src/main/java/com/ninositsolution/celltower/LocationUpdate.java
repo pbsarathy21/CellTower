@@ -39,11 +39,9 @@ public class LocationUpdate  {
                 latitude = String.valueOf(location.getLatitude());
                 longitude = String.valueOf(location.getLongitude());
 
-                SharedPreferences preferences = context.getSharedPreferences("LOCATION", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("lat", latitude);
-                editor.putString("lon", longitude);
-                editor.commit();
+                Session session = new Session(context);
+                session.setLatitude_key(latitude);
+                session.setLongitude_key(longitude);
             }
 
             @Override

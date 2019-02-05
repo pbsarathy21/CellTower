@@ -2,10 +2,8 @@ package com.ninositsolution.celltower;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.CellInfo;
 import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -13,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +22,7 @@ import java.util.List;
 public class TowerAdapter extends RecyclerView.Adapter<TowerAdapter.TowerViewHolder> {
 
     private DatabaseHelper databaseHelper;
+    private Session session;
 
     private Context context;
     private List<NeighboringCellInfo> neighboringCellInfoList;
@@ -30,6 +30,7 @@ public class TowerAdapter extends RecyclerView.Adapter<TowerAdapter.TowerViewHol
     public TowerAdapter(Context context, List<NeighboringCellInfo> neighboringCellInfoList) {
         this.context = context;
         this.neighboringCellInfoList = neighboringCellInfoList;
+        session = new Session(context);
         notifyDataSetChanged();
     }
 
@@ -46,99 +47,33 @@ public class TowerAdapter extends RecyclerView.Adapter<TowerAdapter.TowerViewHol
 
         databaseHelper = new DatabaseHelper(context);
 
-        String cl_text,lac_text,netType_text,rssi_text,psc_text, dbm_text;
+        ArrayList<String> signal;
+
+        TowerModel towerModel = new TowerModel();
 
         long cl = neighboringCellInfoList.get(i).getCid();
-        long tac = neighboringCellInfoList.get(i).getLac();
-        long netType = neighboringCellInfoList.get(i).getNetworkType();
-        long rssi = neighboringCellInfoList.get(i).getRssi();
-        long psc = neighboringCellInfoList.get(i).getPsc();
+        int netType = neighboringCellInfoList.get(i).getNetworkType();
+        int rssi = neighboringCellInfoList.get(i).getRssi();
 
-        if (cl == TelephonyManager.UNKNOWN_CARRIER_ID)
-        {
-            cl_text = "NA";
-            towerViewHolder.cl.setText(cl_text);
-        }
-        else
-        {
-             cl_text = String.valueOf(cl);
-            towerViewHolder.cl.setText(cl_text);
-        }
-        if (tac == TelephonyManager.UNKNOWN_CARRIER_ID)
-        {
-             lac_text = "NA";
-            towerViewHolder.tac.setText(lac_text);
-        }
-        else
-        {
-             lac_text = String.valueOf(tac);
-            towerViewHolder.tac.setText(lac_text);
-        }
-        if (netType == TelephonyManager.NETWORK_TYPE_UNKNOWN)
-        {
-             netType_text = "NA";
-            towerViewHolder.mcc.setText(netType_text);
-        }
-        else if (netType == TelephonyManager.NETWORK_TYPE_EDGE || netType == TelephonyManager.NETWORK_TYPE_GPRS)
-        {
-             netType_text = "GSM";
-            towerViewHolder.mcc.setText(netType_text);
-        }
-        else if (netType == TelephonyManager.NETWORK_TYPE_UMTS || netType == TelephonyManager.NETWORK_TYPE_HSDPA || netType == TelephonyManager.NETWORK_TYPE_HSPA
-         || netType == TelephonyManager.NETWORK_TYPE_HSUPA)
-        {
-             netType_text = "UMTS";
-            towerViewHolder.mcc.setText(netType_text);
-        }
+        signal = towerModel.updateSignal(netType, rssi);
 
-        else if (netType == TelephonyManager.NETWORK_TYPE_LTE)
-        {
-             netType_text = "LTE";
-            towerViewHolder.mcc.setText(netType_text);
-        }
+        if (cl == -1)
+        towerViewHolder.carrier_id.setText("0");
 
         else
-        {
-            netType_text = "NA";
-            towerViewHolder.mcc.setText(netType_text);
-        }
+        towerViewHolder.carrier_id.setText(String.valueOf(cl));
 
-        if (rssi >= 0 && rssi <= 31)
-        {
-            long dbm = (rssi*2)-113;
+        towerViewHolder.dbm.setText(signal.get(0));
+        towerViewHolder.milli_watt.setText(signal.get(1));
+        towerViewHolder.type.setText(signal.get(3));
+        //towerViewHolder.type.setText(String.valueOf(netType));
 
-             dbm_text = String.valueOf(dbm);
-             rssi_text = String.valueOf(rssi);
+        databaseHelper.insertData(signal.get(3), signal.get(1), signal.get(0), signal.get(2));
 
-            towerViewHolder.dbm.setText(dbm_text+" dBm");
-            towerViewHolder.mcc.setText(rssi_text);
-        } else
-        {
-            dbm_text = "NA";
-            rssi_text = String.valueOf(rssi);
-            towerViewHolder.dbm.setText(dbm_text+" dBm");
-            towerViewHolder.mcc.setText(rssi_text);
-        }
 
-        if (psc == TelephonyManager.UNKNOWN_CARRIER_ID)
-        {
-             psc_text = "NA";
-            towerViewHolder.mnc.setText(psc_text);
-        }
-        else
-        {
-             psc_text = String.valueOf(psc);
-            towerViewHolder.mnc.setText(psc_text);
-        }
-
-        LocationUpdate locationUpdate = new LocationUpdate(context);
-
-        SharedPreferences preferences = context.getSharedPreferences("LOCATION", Context.MODE_PRIVATE);
-        String lat = preferences.getString("lat", "NA");
-        String lon = preferences.getString("lon", "NA");
-
-        databaseHelper.insertData(cl_text,lac_text,rssi_text,psc_text,netType_text, dbm_text, lat, lon);
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -147,16 +82,15 @@ public class TowerAdapter extends RecyclerView.Adapter<TowerAdapter.TowerViewHol
 
     public class TowerViewHolder extends RecyclerView.ViewHolder{
 
-        TextView cl, tac, mcc, mnc, dbm;
+        TextView type, carrier_id, milli_watt, dbm;
 
         public TowerViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            cl = itemView.findViewById(R.id.cl);
-            tac = itemView.findViewById(R.id.tac);
-            mcc = itemView.findViewById(R.id.mcc);
-            mnc = itemView.findViewById(R.id.mnc);
             dbm = itemView.findViewById(R.id.dBm);
+            type = itemView.findViewById(R.id.type);
+            carrier_id = itemView.findViewById(R.id.carrier_id);
+            milli_watt = itemView.findViewById(R.id.milliWatt);
         }
     }
 }

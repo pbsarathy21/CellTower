@@ -15,16 +15,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "towers.db";
     public static final String TABLE_NAME = "towers";
-    public static final String COL_1 = "ID";
-    public static final String COL_2 = "CL";
-    public static final String COL_3 = "LAC";
-    public static final String COL_4 = "RSSI";
-    public static final String COL_5 = "PSC";
-    public static final String COL_6 = "NETWORK_TYPE";
-    public static final String COL_7 = "DBM";
-    public static final String COL_8 = "LATITUDE";
-    public static final String COL_9 = "LONGITUDE";
-
+    public static final String COL_1 = "TYPE";
+    public static final String COL_2 = "POWER";
+    public static final String COL_3 = "DBM";
+    public static final String COL_4 = "WATT";
 
     private Context context;
 
@@ -35,8 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table "+TABLE_NAME+" (ID INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "CL TEXT, LAC TEXT, RSSI TEXT, PSC TEXT, NETWORK_TYPE TEXT, DBM TEXT, LATITUDE TEXT, LONGITUDE TEXT)");
+        sqLiteDatabase.execSQL("create table "+TABLE_NAME+" (TYPE TEXT, POWER TEXT, DBM TEXT, WATT TEXT)");
     }
 
     @Override
@@ -44,18 +37,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
     }
 
-    public boolean insertData(String cl, String lac, String rssi, String psc, String network_type, String dbm, String lat, String lon)
+    public boolean insertData(String type, String power, String dbm, String watt)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2, cl);
-        contentValues.put(COL_4, rssi);
-        contentValues.put(COL_3, lac);
-        contentValues.put(COL_6, network_type);
-        contentValues.put(COL_7, dbm);
-        contentValues.put(COL_5, psc);
-        contentValues.put(COL_8, lat);
-        contentValues.put(COL_9, lon);
+        contentValues.put(COL_1, type);
+        contentValues.put(COL_2, power);
+        contentValues.put(COL_3, dbm);
+        contentValues.put(COL_4, watt);
 
         long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
 
@@ -75,56 +64,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.close();
     }
 
-    /*public boolean updateData(String id, String name, String username, String email, String password, String dob, String gender, String mobile)
-    {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_1, id);
-        contentValues.put(COL_2, name);
-        contentValues.put(COL_4, username);
-        contentValues.put(COL_3, email);
-        contentValues.put(COL_8, password);
-        contentValues.put(COL_6, dob);
-        contentValues.put(COL_7, gender);
-        contentValues.put(COL_5, mobile);
-
-        sqLiteDatabase.update(TABLE_NAME, contentValues, "ID = ?", new String[] {id});
-
-        return true;
-    }
-
-    public Integer deleteData(String id)
-    {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        return sqLiteDatabase.delete(TABLE_NAME, "ID = ?", new String[] {id});
-    }
-
-    public boolean checkData(String value, String column)
-    {
-        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-
-        Cursor cursor = sqLiteDatabase.query(TABLE_NAME, new String[] {column},
-                column + " LIKE ?", new String[] {"%" + value + "%"},
-                null, null, null);
-
-        return cursor.getCount() > 0;
-    }
-
-    public boolean checkPassword(String username, String password)
-    {
-        Cursor cursor = null;
-        try {
-            SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-            *//*cursor = sqLiteDatabase.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "
-                    +username+"=? AND "+password+"=?", null);*//*
-            cursor = sqLiteDatabase.query(TABLE_NAME, null, "USERNAME=? and PASSWORD=?",
-                    new String[] {username,password}, null, null, null);
-
-
-        } catch (Exception e) {
-
-        }
-
-        return cursor.getCount() > 0;
-    }*/
 }
