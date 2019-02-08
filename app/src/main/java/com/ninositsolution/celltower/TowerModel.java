@@ -340,5 +340,4 @@ public class TowerModel {
             return signal;
         }
     }
-
 }

@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_2 = "POWER";
     public static final String COL_3 = "DBM";
     public static final String COL_4 = "WATT";
+    public static final String COL_5 = "CARRIER";
 
     private Context context;
 
@@ -29,7 +30,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("create table "+TABLE_NAME+" (TYPE TEXT, POWER TEXT, DBM TEXT, WATT TEXT)");
+        sqLiteDatabase.execSQL("create table "+TABLE_NAME+" (TYPE TEXT, POWER TEXT, DBM TEXT, WATT TEXT, CARRIER TEXT)");
     }
 
     @Override
@@ -37,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
     }
 
-    public boolean insertData(String type, String power, String dbm, String watt)
+    public boolean insertData(String type, String power, String dbm, String watt, String carrier)
     {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -45,6 +46,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_2, power);
         contentValues.put(COL_3, dbm);
         contentValues.put(COL_4, watt);
+        contentValues.put(COL_5, carrier);
 
         long result = sqLiteDatabase.insert(TABLE_NAME, null, contentValues);
 

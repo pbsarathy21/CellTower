@@ -40,7 +40,6 @@ public class TowerActivity extends AppCompatActivity implements ITower{
 
     }
 
-
         @Override
     public void setRecyclerViewAdapter(TowerAdapter towerAdapter) {
 
@@ -115,7 +114,8 @@ public class TowerActivity extends AppCompatActivity implements ITower{
 
                 int last_col = cursor.getCount()+2;
 
-                sheet.addCell(new Label(last_col, 0, "Net Power(mW)"));
+                sheet.addCell(new Label(last_col, 0, "Radiated Power(mW)"));
+                sheet.addCell(new Label(last_col+1, 0, "Radiated Power(dBm)"));
 
 
                 for (int i = 2; i<cursor.getCount()+2; i++)
@@ -127,17 +127,17 @@ public class TowerActivity extends AppCompatActivity implements ITower{
                 if (cursor.moveToFirst())
                 {
                     do {
-                        String type = cursor.getString(cursor.getColumnIndex("TYPE"));
+                        String carrier = cursor.getString(cursor.getColumnIndex("CARRIER"));
 
                         int i = cursor.getPosition() + 2;
-                        sheet.addCell(new Label(i, 0, type));
+                        sheet.addCell(new Label(i, 0, carrier));
                     } while (cursor.moveToNext());
                 }
 
                 if (cursor.moveToFirst())
                 {
                     do {
-                        String type = cursor.getString(cursor.getColumnIndex("POWER"));
+                        String type = cursor.getString(cursor.getColumnIndex("DBM"));
 
                         int i = cursor.getPosition() + 2;
                         sheet.addCell(new Label(i, 1, type));
@@ -161,11 +161,13 @@ public class TowerActivity extends AppCompatActivity implements ITower{
                 }
 
                 String Total = String.valueOf(wattSum);
+                double dbm = Math.round(10*Math.log10(wattSum)*100.0)/100.0;
                 String Total1 = Total.substring(0,4);
                 String Total2 = Total.substring(Total.lastIndexOf("E")+1);
                 String Total_value = Total1 + " * 10^(" + Total2 + ")";
 
                 sheet.addCell(new Label(last_col, 1, Total_value));
+                sheet.addCell(new Label(last_col+1, 1, String.valueOf(dbm)+ " dBm"));
 
                 String lat = session.getLatitude_key();
                 String lon = session.getLongitude_key();

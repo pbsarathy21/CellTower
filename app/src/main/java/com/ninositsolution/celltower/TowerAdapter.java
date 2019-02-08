@@ -68,7 +68,7 @@ public class TowerAdapter extends RecyclerView.Adapter<TowerAdapter.TowerViewHol
         towerViewHolder.type.setText(signal.get(3));
         //towerViewHolder.type.setText(String.valueOf(netType));
 
-        databaseHelper.insertData(signal.get(3), signal.get(1), signal.get(0), signal.get(2));
+        databaseHelper.insertData(signal.get(3), signal.get(1), signal.get(0), signal.get(2), String.valueOf(cl));
 
 
     }
